@@ -4,6 +4,15 @@ import { v4 as uuidv4 } from "https://jspm.dev/uuid"; //import UUID from github 
 const tweetInput = document.getElementById("tweet-input");
 const feed = document.getElementById("feed");
 
+//LOCALSTORAGE
+let tweetData;
+//take the data from localstorage if something is in LS and convert it from string back to object else write the data.js to tweetData
+if (localStorage.getItem("tweet")) {
+  tweetData = JSON.parse(localStorage.getItem("tweet"));
+} else {
+  tweetData = tweetsData;
+}
+
 //watch for clicks in the all document when clicked is like, share,comment
 document.addEventListener("click", function (e) {
   if (e.target.dataset.heart) {
@@ -113,12 +122,12 @@ function renderTweets(feeds) {
 }
 
 //call the render function
-renderTweets(tweetsData);
+renderTweets(tweetData);
 
 //function for like icon
 function handleLikeClick(tweetId) {
   //target the rigt tweet object
-  const targetTweetObj = tweetsData.filter(function (tweet) {
+  const targetTweetObj = tweetData.filter(function (tweet) {
     return tweet.uuid === tweetId;
   })[0]; //take the 0 index of array because we want to have only object from it
 
@@ -132,14 +141,16 @@ function handleLikeClick(tweetId) {
   //change targetTweetObj to true or false
   targetTweetObj.isLiked = !targetTweetObj.isLiked;
 
+  updateLocalStorage(); // call the update function for update the localstorage after deleting something
+
   //update the redner function
-  renderTweets(tweetsData);
+  renderTweets(tweetData);
 }
 
 //function for retweet icon
 function handleRetweetClick(retweets) {
   //target the rigt tweet object
-  const targetRetweetObj = tweetsData.filter(function (retweet) {
+  const targetRetweetObj = tweetData.filter(function (retweet) {
     return retweet.uuid === retweets;
   })[0]; //take the 0 index of array because we want to have only object from it
 
@@ -153,8 +164,10 @@ function handleRetweetClick(retweets) {
   //change targetTweetObj to true or false
   targetRetweetObj.isRetweeted = !targetRetweetObj.isRetweeted;
 
+  updateLocalStorage(); // call the update function for update the localstorage after deleting something
+
   //update the redner function
-  renderTweets(tweetsData);
+  renderTweets(tweetData);
 }
 
 //function for replies
@@ -168,7 +181,7 @@ function handleTweetBtn() {
   //if inputvalue have something in it
   if (tweetInput.value) {
     //push this hardcoded object up to feed tweets
-    tweetsData.unshift({
+    tweetData.unshift({
       handle: `@Karol`,
       profilePic: `images/me.jpg`,
       likes: 0,
@@ -180,8 +193,10 @@ function handleTweetBtn() {
       uuid: uuidv4(), //call the uuid generator
     });
 
-    renderTweets(tweetsData); //call the render function
+    renderTweets(tweetData); //call the render function
     tweetInput.value = ""; //clear input
+
+    updateLocalStorage(); // call the update function for update the localstorage after deleting something
   }
 }
 
@@ -193,7 +208,7 @@ function handleNewBtnComment(comment) {
   ).value;
 
   //filter throught data and if uuid match the uuid of current tweet store it to the variable
-  const targetNewCommentObj = tweetsData.filter(function (newComment) {
+  const targetNewCommentObj = tweetData.filter(function (newComment) {
     return newComment.uuid === comment;
   })[0]; //return from array the first index of object
 
@@ -205,21 +220,27 @@ function handleNewBtnComment(comment) {
       tweetText: newCommentInput,
     });
   }
+  updateLocalStorage(); // call the update function for update the localstorage after deleting something
 
-  renderTweets(tweetsData); //update the render
+  renderTweets(tweetData); //update the render
   handleReplyClick(comment); //call the function for not closing the comments after adding new comment
 }
 
 //function for delete the tweets
 function handleDeleteTweet(tweet) {
   // Find the tweet with the provided UUID
-  const targetDeleteObj = tweetsData.filter(function (tweets) {
+  const targetDeleteObj = tweetData.filter(function (tweets) {
     return tweets.uuid === tweet;
   })[0]; //return from array the first index of object
 
   //delete the current tweet from array with splice method which takes the current array and remove it only 1
-  tweetsData.splice(targetDeleteObj, 1);
-
+  tweetData.splice(targetDeleteObj, 1);
+  updateLocalStorage(); // call the update function for update the localstorage after deleting something
   // Render the updated tweets feed
-  renderTweets(tweetsData);
+  renderTweets(tweetData);
+}
+
+// Update Local Storage
+function updateLocalStorage() {
+  localStorage.setItem("tweet", JSON.stringify(tweetData));
 }
