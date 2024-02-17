@@ -120,7 +120,7 @@ function handleLikeClick(tweetId) {
   //target the rigt tweet object
   const targetTweetObj = tweetsData.filter(function (tweet) {
     return tweet.uuid === tweetId;
-  })[0]; //take the 0 indes of array
+  })[0]; //take the 0 index of array because we want to have only object from it
 
   //if isLiked in data.js is true decrement the likes else increment
   if (targetTweetObj.isLiked) {
@@ -132,7 +132,7 @@ function handleLikeClick(tweetId) {
   //change targetTweetObj to true or false
   targetTweetObj.isLiked = !targetTweetObj.isLiked;
 
-  //render out the likes
+  //update the redner function
   renderTweets(tweetsData);
 }
 
@@ -141,7 +141,7 @@ function handleRetweetClick(retweets) {
   //target the rigt tweet object
   const targetRetweetObj = tweetsData.filter(function (retweet) {
     return retweet.uuid === retweets;
-  })[0]; //take the 0 index of array
+  })[0]; //take the 0 index of array because we want to have only object from it
 
   //if isRetweeted in data.js is true decrement the likes else increment
   if (targetRetweetObj.isRetweeted) {
@@ -153,7 +153,7 @@ function handleRetweetClick(retweets) {
   //change targetTweetObj to true or false
   targetRetweetObj.isRetweeted = !targetRetweetObj.isRetweeted;
 
-  //render out the retweets
+  //update the redner function
   renderTweets(tweetsData);
 }
 
@@ -163,7 +163,7 @@ function handleReplyClick(reply) {
   document.getElementById(`replies-${reply}`).classList.toggle("hidden");
 }
 
-//function for Tweet Btn and input pushing to the tweetsdata in data.js
+//function for Tweet Btn and input pushing to the tweetsdata in data.js with random uuid
 function handleTweetBtn() {
   //if inputvalue have something in it
   if (tweetInput.value) {
@@ -179,6 +179,7 @@ function handleTweetBtn() {
       isRetweeted: false,
       uuid: uuidv4(), //call the uuid generator
     });
+
     renderTweets(tweetsData); //call the render function
     tweetInput.value = ""; //clear input
   }
@@ -196,25 +197,28 @@ function handleNewBtnComment(comment) {
     return newComment.uuid === comment;
   })[0]; //return from array the first index of object
 
-  //psuh to the top new object
-  targetNewCommentObj.replies.unshift({
-    handle: `@Karol`,
-    profilePic: `images/me.jpg`,
-    tweetText: newCommentInput,
-  });
+  //push to the top new object if input is true
+  if (newCommentInput) {
+    targetNewCommentObj.replies.unshift({
+      handle: `@Karol`,
+      profilePic: `images/me.jpg`,
+      tweetText: newCommentInput,
+    });
+  }
 
-  renderTweets(tweetsData); //render the new comment
+  renderTweets(tweetsData); //update the render
   handleReplyClick(comment); //call the function for not closing the comments after adding new comment
 }
 
 //function for delete the tweets
-function handleDeleteTweet(tweetId) {
-  // Filter out the tweet with the provided UUID
-  tweetsData = tweetsData.filter(function (tweet) {
-    tweet.uuid !== tweetId;
-  });
+function handleDeleteTweet(tweet) {
+  // Find the tweet with the provided UUID
+  const targetDeleteObj = tweetsData.filter(function (tweets) {
+    return tweets.uuid === tweet;
+  })[0]; //return from array the first index of object
 
-  console.log(tweetsData);
+  //delete the current tweet from array with splice method which takes the current array and remove it only 1
+  tweetsData.splice(targetDeleteObj, 1);
 
   // Render the updated tweets feed
   renderTweets(tweetsData);
