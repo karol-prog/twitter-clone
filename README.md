@@ -17,3 +17,6 @@ This is a Kwitter a feed clone of Twitter. It was really cool project to write a
 - forEach(), filters() methods
 - Target specify item with data attributes
 - Making boiler plates
+
+Check it live:
+https://karol-kwitter.netlify.app/
