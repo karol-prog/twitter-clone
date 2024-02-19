@@ -55,7 +55,7 @@ function getFeedToHtml(feed) {
     }
 
     //for replies/comments
-    //if in data.js replies lenght is more than 0 loop throught this replies and take this borderplate
+    //if in data.js replies lenght is more than 0 loop throught this replies and take this boilerplate
     if (feeds.replies.length > 0) {
       feeds.replies.forEach(function (reply) {
         replies += `
@@ -112,7 +112,7 @@ function getFeedToHtml(feed) {
         </div> 
     </div>`;
   });
-  return feedHtml; //return value that stores borderplate
+  return feedHtml; //return value that stores boilerplate
 }
 
 //function for render the border plate to the screen
