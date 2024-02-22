@@ -80,7 +80,7 @@ function getFeedToHtml(feed) {
     </div>
 `;
 
-    //add this border plate to variable
+    //add this boiler plate to variable
     feedHtml += `
     <div class="tweet">
         <div class="tweet-inner">
@@ -115,7 +115,7 @@ function getFeedToHtml(feed) {
   return feedHtml; //return value that stores boilerplate
 }
 
-//function for render the border plate to the screen
+//function for render the boiler plate to the screen
 function renderTweets(feeds) {
   let feedsToRender = getFeedToHtml(feeds);
   feed.innerHTML = feedsToRender;
